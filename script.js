@@ -1,5 +1,7 @@
+// Store wishes in array
 let wishes = [];
 
+// Form submission handler for new wishes
 document.getElementById('newWishForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -13,11 +15,13 @@ document.getElementById('newWishForm').addEventListener('submit', function(e) {
         dateCreated: new Date()
     };
 
-    wishes.push(wish);
+    // Add new wish to the beginning of the array
+    wishes.unshift(wish);
     updateWishList();
     this.reset();
 });
 
+// Function to update the wish list display
 function updateWishList() {
     const container = document.getElementById('wishListContainer');
     container.innerHTML = '';
@@ -47,12 +51,12 @@ function updateWishList() {
     });
 }
 
-
+// Function to handle contributions
 function contribute(wishId) {
     const amountInput = document.getElementById(`amount-${wishId}`);
     const amount = parseFloat(amountInput.value);
     
-    if (amount <= 0) {
+    if (!amount || amount <= 0) {
         alert('Please enter a valid amount');
         return;
     }
@@ -60,6 +64,7 @@ function contribute(wishId) {
     const wish = wishes.find(w => w.id === wishId);
     if (wish) {
         const newTotal = wish.currentAmount + amount;
+        
         if (newTotal >= wish.targetAmount) {
             wish.currentAmount = wish.targetAmount;
             updateWishList();
@@ -75,3 +80,8 @@ function contribute(wishId) {
         amountInput.value = '';
     }
 }
+
+
+
+// Initial render
+updateWishList();
