@@ -1,0 +1,568 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joint Budget Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6366f1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .create-btn {
+            background: #6366f1;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .create-btn:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .sort-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            background: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            margin-top: 1rem;
+        }
+
+        .sort-select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .budgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .budget-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .budget-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .budget-card h3 {
+            color: #374151;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .budget-info {
+            margin-bottom: 1rem;
+        }
+
+        .budget-info p {
+            color: #6b7280;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #6366f1;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-content h2 {
+            color: #374151;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .form-group button {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .create-btn {
+                width: auto;
+                min-width: 200px;
+            }
+
+            .budgets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="page1.html">My Budget</a>
+                <a href="page2.html">My Groups</a>
+                <a href="page3.html">Leaderboard</a>
+                <a href="page4.html">My Badges</a>
+                <a href="settings.html">Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>Joint Budget Management</h1>
+            <button class="create-btn" onclick="openModal()">+ Create a New Group Budget</button>
+        </header>
+
+        <select class="sort-select" aria-label="Sort budgets">
+            <option value="progress">Sort by Progress</option>
+            <option value="name">Sort by Name</option>
+            <option value="date">Sort by Date</option>
+        </select>
+
+        <div class="budgets-grid">
+            
+        </div>
+    </div>
+
+    <div class="modal" id="createGroupModal">
+        <div class="modal-content">
+            <h2>Create New Group Budget</h2>
+            <form>
+                <div class="form-group">
+                    <label for="groupName">Group Name</label>
+                    <input type="text" id="groupName" placeholder="Enter group name" required>
+                </div>
+                <div class="form-group">
+                    <label for="budgetAmount">Total Budget Amount</label>
+                    <input type="number" id="budgetAmount" placeholder="Enter amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="members">Add Members</label>
+                    <input type="text" id="members" placeholder="Enter email addresses" required>
+                </div>
+                <div class="form-group">
+                    <label for="deadline">Deadline (Optional)</label>
+                    <input type="date" id="deadline">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="create-btn">Create Group</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('createGroupModal');
+        const budgetsGrid = document.querySelector('.budgets-grid');
+        const form = document.querySelector('form');
+
+        function openModal() {
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            form.reset();
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        function createBudgetCard(data) {
+            const card = document.createElement('div');
+            card.className = 'budget-card';
+            
+            card.innerHTML = `
+                <h3>${data.groupName}</h3>
+                <div class="budget-info">
+                    <p><strong>Budget:</strong> $${data.budgetAmount}</p>
+                    <p><strong>Members:</strong> ${data.members}</p>
+                    ${data.deadline ? `<p><strong>Deadline:</strong> ${data.deadline}</p>` : ''}
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                groupName: document.getElementById('groupName').value,
+                budgetAmount: document.getElementById('budgetAmount').value,
+                members: document.getElementById('members').value,
+                deadline: document.getElementById('deadline').value
+            };
+
+            const newCard = createBudgetCard(formData);
+            budgetsGrid.insertBefore(newCard, budgetsGrid.firstChild);
+            
+            closeModal();
+
+            setTimeout(() => {
+                const progressFill = newCard.querySelector('.progress-fill');
+                progressFill.style.width = '30%';
+            }, 100);
+        });
+
+        const sortSelect = document.querySelector('.sort-select');
+        sortSelect.addEventListener('change', function(e) {
+            const cards = Array.from(budgetsGrid.children);
+            
+            cards.sort((a, b) => {
+                const valueA = a.querySelector('h3').textContent;
+                const valueB = b.querySelector('h3').textContent;
+                
+                switch(e.target.value) {
+                    case 'name':
+                        return valueA.localeCompare(valueB);
+                    case 'date':
+                        return new Date(b.querySelector('.budget-info p:last-child')?.textContent || 0) - 
+                               new Date(a.querySelector('.budget-info p:last-child')?.textContent || 0);
+                    default:
+                        return 0;
+                }
+            });
+
+            cards.forEach(card => budgetsGrid.appendChild(card));
+        });
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joint Budget Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background: #f5f5f5; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .create-btn { background: #6366f1; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; margin-bottom: 1rem; }
+        .budgets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .budget-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; width: 90%; max-width: 500px; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; background: none; border: none; }
+        .expense-list, .add-expense { margin-top: 1rem; }
+        .expense-list p { background: #f4f4f4; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Joint Budget Management</h1>
+        <button class="create-btn" onclick="openCreateGroupModal()">+ Create a New Group</button>
+        <div class="budgets-grid"></div>
+    </div>
+
+    <!-- Expense Details Modal -->
+    <div class="modal" id="expenseModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeExpenseModal()">×</button>
+            <h2 id="groupTitle">Group Details</h2>
+            <div class="expense-list" id="expenseList"></div>
+
+            <div class="add-expense">
+                <h3>Add Expense</h3>
+                <div class="form-group">
+                    <label for="payer">Payer</label>
+                    <select id="payer"></select>
+                </div>
+                <div class="form-group">
+                    <label for="receiver">Receiver</label>
+                    <select id="receiver"></select>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" placeholder="Enter amount">
+                </div>
+                <button class="create-btn" onclick="addExpense()">Add Expense</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal" id="createGroupModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeCreateGroupModal()">×</button>
+            <h2>Create a New Group</h2>
+            <div class="form-group">
+                <label for="groupName">Group Name</label>
+                <input type="text" id="groupName" placeholder="Enter group name">
+            </div>
+            <div class="form-group">
+                <label for="members">Add Members (comma separated)</label>
+                <input type="text" id="members" placeholder="Enter names (e.g., Alice, Bob)">
+            </div>
+            <button class="create-btn" onclick="addGroup()">Create Group</button>
+        </div>
+    </div>
+
+    <script>
+        const budgetsGrid = document.querySelector('.budgets-grid');
+        let groupData = [];
+        let settlementData = {};
+        let currentGroup = null; // Track which group is being modified
+
+        function openCreateGroupModal() {
+            document.getElementById("createGroupModal").style.display = "flex";
+        }
+
+        function closeCreateGroupModal() {
+            document.getElementById("createGroupModal").style.display = "none";
+        }
+
+        function createBudgetCard(data) {
+            const card = document.createElement('div');
+            card.className = 'budget-card';
+            card.innerHTML = `<h3>${data.groupName}</h3><p><strong>Members:</strong> ${data.members.join(", ")}</p>`;
+            card.addEventListener('click', () => openExpenseModal(data));
+            return card;
+        }
+
+        function openExpenseModal(group) {
+            currentGroup = group.groupName; // Set the active group
+            const modal = document.getElementById("expenseModal");
+            const title = document.getElementById("groupTitle");
+            const expenseList = document.getElementById("expenseList");
+            const payerSelect = document.getElementById("payer");
+            const receiverSelect = document.getElementById("receiver");
+
+            title.textContent = group.groupName;
+            expenseList.innerHTML = "";
+            payerSelect.innerHTML = "";
+            receiverSelect.innerHTML = "";
+
+            group.members.forEach(member => {
+                let option = `<option value="${member}">${member}</option>`;
+                payerSelect.innerHTML += option;
+                receiverSelect.innerHTML += option;
+            });
+
+            if (!settlementData[group.groupName]) settlementData[group.groupName] = [];
+            settlementData[group.groupName] = settlementData[group.groupName].filter(expense => expense.amount > 0);
+            settlementData[group.groupName].forEach(expense => {
+                const expenseItem = document.createElement("p");
+                expenseItem.textContent = `${expense.payer} owes ${expense.receiver} $${expense.amount}`;
+                expenseList.appendChild(expenseItem);
+            });
+
+            modal.style.display = "flex";
+        }
+
+        function closeExpenseModal() {
+            document.getElementById("expenseModal").style.display = "none";
+        }
+
+        function addGroup() {
+            const groupName = document.getElementById("groupName").value;
+            const members = document.getElementById("members").value.split(",").map(m => m.trim());
+
+            if (!groupName || members.length === 0) {
+                alert("Please enter valid group details!");
+                return;
+            }
+
+            const newGroup = { groupName, members };
+            groupData.push(newGroup);
+            settlementData[groupName] = [];
+
+            const newCard = createBudgetCard(newGroup);
+            budgetsGrid.appendChild(newCard);
+            closeCreateGroupModal();
+        }
+
+        function addExpense() {
+            if (!currentGroup) return;
+
+            const payer = document.getElementById("payer").value;
+            const receiver = document.getElementById("receiver").value;
+            let amount = parseFloat(document.getElementById("amount").value);
+
+            if (payer === receiver || amount <= 0) {
+                alert("Invalid transaction!");
+                return;
+            }
+
+            let debts = settlementData[currentGroup];
+
+            let oppositeDebt = debts.find(d => d.payer === receiver && d.receiver === payer);
+            if (oppositeDebt) {
+                if (oppositeDebt.amount > amount) {
+                    oppositeDebt.amount -= amount;
+                    amount = 0;
+                } else {
+                    amount -= oppositeDebt.amount;
+                    debts = debts.filter(d => d !== oppositeDebt);
+                }
+            }
+
+            if (amount > 0) {
+                debts.push({ payer, receiver, amount });
+            }
+
+            settlementData[currentGroup] = debts.filter(d => d.amount > 0);
+            openExpenseModal(groupData.find(g => g.groupName === currentGroup));
+        }
+
+    </script>
+
+</body>
+</html>
