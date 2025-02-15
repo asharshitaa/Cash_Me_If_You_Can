@@ -1,38 +1,4 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wish List Pooling</title>
-   
-    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Wish List Pooling</h1>
-            <p>Create and contribute to shared goals!</p>
-        </div>
-
-        <div class="add-wish-form">
-            <h2>Add New Wish</h2>
-            <form id="newWishForm">
-                <input type="text" id="wishTitle" placeholder="Wish Title" required>
-                <input type="number" id="wishAmount" placeholder="Target Amount" required>
-                <input type="text" id="wishTags" placeholder="Tags (comma-separated)">
-                <button type="submit">Add Wish</button>
-            </form>
-        </div>
-
-        <div class="wish-list-container" id="wishListContainer">
-            
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html> -->
-
+<!-- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,13 +21,242 @@
             <form id="newWishForm">
                 <input type="text" id="wishTitle" placeholder="Expense Name" required>
                 <input type="number" id="splitCount" placeholder="Number of Splits" min="1" required>
-                <div id="splitInputs"></div> <!-- Dynamic Inputs for Splits -->
+                <div id="splitInputs"></div>
                 <button type="submit">Add Expense</button>
             </form>
         </div>
 
         <div class="wish-list-container" id="wishListContainer"></div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        let wishes = JSON.parse(localStorage.getItem('wishes')) || [];
+
+        document.getElementById('newWishForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('wishTitle').value;
+            const splitCount = parseInt(document.getElementById('splitCount').value);
+            const splits = [];
+
+            for (let i = 0; i < splitCount; i++) {
+                const name = document.getElementById(`splitName${i}`).value;
+                const amount = parseFloat(document.getElementById(`splitAmount${i}`).value);
+                splits.push({ name, amount, currentAmount: 0 });
+            }
+
+            const wish = { id: Date.now(), title, splits };
+            wishes.unshift(wish);
+            updateWishList();
+            saveData();
+            this.reset();
+            document.getElementById('splitInputs').innerHTML = '';
+        });
+
+        document.getElementById('splitCount').addEventListener('input', function() {
+            const count = parseInt(this.value);
+            const container = document.getElementById('splitInputs');
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                container.innerHTML += `<input type="text" id="splitName${i}" placeholder="Category Name" required>
+                                        <input type="number" id="splitAmount${i}" placeholder="Amount" required>`;
+            }
+        });
+
+        function updateWishList() {
+            const container = document.getElementById('wishListContainer');
+            container.innerHTML = '';
+            wishes.forEach(wish => {
+                let wishElement = `<div class='wish-item'>
+                                    <h3>${wish.title}</h3>`;
+                wish.splits.forEach(split => {
+                    let progress = (split.currentAmount / split.amount) * 100;
+                    wishElement += `<div class='split-container'>
+                                        <div class='split-label'>${split.name}</div>
+                                        <div class='progress-bar'>
+                                            <div class='progress' style='width: ${progress}%'></div>
+                                        </div>
+                                        <p>$${split.currentAmount} / $${split.amount}</p>
+                                        <input type='number' id='contribute-${wish.id}-${split.name}' placeholder='Contribute Amount' min='1'>
+                                        <button onclick='contribute(${wish.id}, "${split.name}")'>Contribute</button>
+                                    </div>`;
+                });
+                wishElement += `</div>`;
+                container.innerHTML += wishElement;
+            });
+        }
+
+        function contribute(wishId, splitName) {
+            const input = document.getElementById(`contribute-${wishId}-${splitName}`);
+            const amount = parseFloat(input.value);
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            const wish = wishes.find(w => w.id === wishId);
+            if (wish) {
+                const split = wish.splits.find(s => s.name === splitName);
+                if (split) {
+                    split.currentAmount = Math.min(split.currentAmount + amount, split.amount);
+                    updateWishList();
+                    saveData();
+                }
+            }
+            input.value = '';
+        }
+
+        function saveData() {
+            localStorage.setItem('wishes', JSON.stringify(wishes));
+        }
+
+        document.getElementById('resetPage').addEventListener('click', function() {
+            localStorage.removeItem('wishes');
+            wishes = [];
+            updateWishList();
+        });
+
+        updateWishList();
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wish List Pooling</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="main.html">My Budget</a>
+                <a href="joint.html">My Groups</a>
+                <a href="index.html">My WishList</a>
+                <a href="page4.html">My Badges</a>
+                <a href="settings.html">Settings</a>    
+            </div>
+        </nav>
+
+        <div class="header">
+            <h1>Wish List Pooling</h1>
+            <p>Create and contribute to shared expenses!</p>
+            <button id="resetPage">Reset Page</button>
+        </div>
+
+        <div class="add-wish-form">
+            <h2>Add New Expense</h2>
+            <form id="newWishForm">
+                <input type="text" id="wishTitle" placeholder="Expense Name" required>
+                <input type="number" id="splitCount" placeholder="Number of Splits" min="1" required>
+                <div id="splitInputs"></div>
+                <button type="submit">Add Expense</button>
+            </form>
+        </div>
+
+        <div class="wish-list-container" id="wishListContainer"></div>
+    </div>
+
+    <script>
+        let wishes = [];
+
+        document.getElementById('newWishForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('wishTitle').value;
+            const splitCount = parseInt(document.getElementById('splitCount').value);
+            const splits = [];
+
+            for (let i = 0; i < splitCount; i++) {
+                const name = document.getElementById(`splitName${i}`).value;
+                const amount = parseFloat(document.getElementById(`splitAmount${i}`).value);
+                splits.push({ name, amount, currentAmount: 0 });
+            }
+
+            const wish = { id: Date.now(), title, splits };
+            wishes.unshift(wish);
+            updateWishList();
+            saveData();
+            this.reset();
+            document.getElementById('splitInputs').innerHTML = '';
+        });
+
+        document.getElementById('splitCount').addEventListener('input', function() {
+            const count = parseInt(this.value);
+            const container = document.getElementById('splitInputs');
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                container.innerHTML += `<input type="text" id="splitName${i}" placeholder="Category Name" required>
+                                        <input type="number" id="splitAmount${i}" placeholder="Amount" required>`;
+            }
+        });
+
+        function updateWishList() {
+            const container = document.getElementById('wishListContainer');
+            container.innerHTML = '';
+            wishes.forEach(wish => {
+                let wishElement = `<div class='wish-item'>
+                                    <h3>${wish.title}</h3>`;
+                wish.splits.forEach(split => {
+                    let progress = (split.currentAmount / split.amount) * 100;
+                    wishElement += `<div class='split-container'>
+                                        <div class='split-label'>${split.name}</div>
+                                        <div class='progress-bar'>
+                                            <div class='progress' style='width: ${progress}%'></div>
+                                        </div>
+                                        <p>$${split.currentAmount} / $${split.amount}</p>
+                                        <input type='number' id='contribute-${wish.id}-${split.name}' placeholder='Contribute Amount' min='1'>
+                                        <button onclick='contribute(${wish.id}, "${split.name}")'>Contribute</button>
+                                    </div>`;
+                });
+                wishElement += `</div>`;
+                container.innerHTML += wishElement;
+            });
+        }
+
+        function contribute(wishId, splitName) {
+            const input = document.getElementById(`contribute-${wishId}-${splitName}`);
+            const amount = parseFloat(input.value);
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            const wish = wishes.find(w => w.id === wishId);
+            if (wish) {
+                const split = wish.splits.find(s => s.name === splitName);
+                if (split) {
+                    split.currentAmount = Math.min(split.currentAmount + amount, split.amount);
+                    updateWishList();
+                    saveData();
+                }
+            }
+            input.value = '';
+        }
+
+        function saveData() {
+            localStorage.setItem('wishlistData', JSON.stringify(wishes));
+        }
+
+        function loadData() {
+            const storedData = localStorage.getItem('wishlistData');
+            if (storedData) {
+                wishes = JSON.parse(storedData);
+                updateWishList();
+            }
+        }
+
+        document.getElementById('resetPage').addEventListener('click', function() {
+            localStorage.removeItem('wishlistData');
+            wishes = [];
+            updateWishList();
+        });
+
+        loadData();
+    </script>
 </body>
 </html>
+
