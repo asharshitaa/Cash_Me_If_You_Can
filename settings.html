@@ -4,86 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Poiret One', cursive;
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
+            box-sizing: border-box;
+            font-family: 'Poiret One', cursive;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #f4f4f9 0%, #e0e7ff 100%);
             color: #333;
         }
-        nav {
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .flex {
-            display: flex;
-            justify-content: center;
-        }
-        .flex a {
-            text-decoration: none;
-            font-size: 18px;
-            margin: 0 15px;
-        }
-        .text-gray-700 {
-            color: #4a5568;
-        }
-        .hover-text-blue-500:hover {
-            color: #3b82f6;
-        }
+
         .settings-container {
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
             background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .settings-container h1 {
             text-align: center;
-            font-size: 32px;
+            font-size: 36px;
             margin-bottom: 20px;
+            font-weight: bold;
         }
+
         .settings-container label {
             display: block;
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 10px;
         }
+
         .settings-container input {
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
             margin-bottom: 20px;
         }
+
         .settings-container button {
             display: block;
             width: 100%;
-            padding: 10px;
-            font-size: 18px;
+            padding: 12px;
+            font-size: 20px;
             background-color: #3b82f6;
-            color: #ffffff;
+            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: background 0.3s;
         }
+
         .settings-container button:hover {
             background-color: #2563eb;
         }
     </style>
 </head>
 <body>
-    
-    <nav>
+
+    <nav class="bg-white shadow-md p-5 flex items-center justify-center w-full h-20">
         <div class="flex space-x-12">
-            <a href="page1.html" class="text-gray-700 hover-text-blue-500">My Budget</a>
-            <a href="page2.html" class="text-gray-700 hover-text-blue-500">My Groups</a>
-            <a href="page3.html" class="text-gray-700 hover-text-blue-500">Leaderboard</a>
-            <a href="page4.html" class="text-gray-700 hover-text-blue-500">My Badges</a>
-            <a href="settings.html" class="text-gray-700 hover-text-blue-500">Settings</a>
+            <a href="budget.html" class="text-gray-700 hover:text-blue-500 text-lg font-semibold">My Budget</a>
+            <a href="joint_tracking.html" class="text-gray-700 hover:text-blue-500 text-lg font-semibold">My Groups</a>
+            <a href="wish_list.html" class="text-gray-700 hover:text-blue-500 text-lg font-semibold">My WishList</a>
+            <a href="page4.html" class="text-gray-700 hover:text-blue-500 text-lg font-semibold">My Badges</a>
+            <a href="settings.html" class="text-gray-700 hover:text-blue-500 text-lg font-semibold">Settings</a>
         </div>
     </nav>
 
@@ -102,5 +96,6 @@
             <button type="submit">Save Changes</button>
         </form>
     </div>
+
 </body>
 </html>
